@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<robot name="onrobot_sd" xmlns:xacro="http://ros.org/wiki/xacro">
+
+  <link name="world" />
+
+  <link name="base_link">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0.04607"/>
+      <mass value="2.5"/>
+      <inertia ixx="1.22763e-05" iyy="1.22763e-05" izz="1.22763e-05" ixy="0.0" ixz="0.0" iyz="0.0" />
+    </inertial>
+    <visual>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://onrobot_sd_description/meshes/visual/onrobot_sd.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="">
+        <color rgba="0.2 0.2 0.2 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+      <geometry>
+        <mesh filename="package://onrobot_sd_description/meshes/collision/onrobot_sd.stl" scale="1 1 1"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="world_fixed_joint" type="fixed">
+    <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+    <parent link="world"/>
+    <child link="base_link"/>
+  </joint>
+
+</robot>

@@ -1,0 +1,18 @@
+services:
+    onrobot_humble_ws:
+        build:
+            context: "docker"
+            dockerfile: "Dockerfile"
+        container_name: onrobot_humble_container
+        environment:
+            - DISPLAY=$DISPLAY
+            - QT_X11_NO_MITSHM=1
+            - ROS_HOSTNAME=localhost
+        volumes:
+            - /dev:/dev
+            - /tmp/.X11-unix:/tmp/.X11-unix:rw
+            - ./ros2_ws/humble/src:/ros2_ws/src
+        privileged: true
+        tty: true
+        network_mode: host
+        command: bash -c "source /opt/ros/humble/setup.bash && colcon build --symlink-install --executor sequential && bash"
