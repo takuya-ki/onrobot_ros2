@@ -55,6 +55,9 @@ ros2 launch onrobot_2fg7_description display.launch.py
 ```bash
 ros2 launch onrobot_rg2_description display.launch.py
 ```
+```bash
+ros2 launch onrobot_rg6_description display.launch.py
+```
 
 ##### Run the server receiving motion commands in the real-world
 ```bash
