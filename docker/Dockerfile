@@ -59,6 +59,7 @@ RUN echo "export XDG_RUNTIME_DIR=/tmp/runtime-futa" >> ~/.bashrc
 WORKDIR /ros2_ws/
 RUN echo "colcon build --symlink-install --executor sequential" >> ~/.bash_history
 RUN echo "ros2 launch onrobot_sd_description display.launch.py" >> ~/.bash_history
+RUN echo "ros2 launch onrobot_2fg7_description display.launch.py" >> ~/.bash_history
 RUN echo "ros2 launch onrobot_sd_tutorials server.launch.py" >> ~/.bash_history
 RUN echo "ros2 service call /onrobot_sd/move_shank onrobot_interfaces/srv/SetCommand \"{command: '0.2'}\"" >> ~/.bash_history
 RUN echo "ros2 service call /onrobot_sd/move_shank onrobot_interfaces/srv/SetCommand \"{command: '0.5'}\"" >> ~/.bash_history
