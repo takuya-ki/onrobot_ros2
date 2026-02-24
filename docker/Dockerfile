@@ -63,6 +63,8 @@ RUN echo "ros2 launch onrobot_2fg7_description display.launch.py" >> ~/.bash_his
 RUN echo "ros2 launch onrobot_rg2_description display.launch.py" >> ~/.bash_history
 RUN echo "ros2 launch onrobot_rg6_description display.launch.py" >> ~/.bash_history
 RUN echo "ros2 launch onrobot_vg10_description display.launch.py" >> ~/.bash_history
+RUN echo "ros2 launch onrobot_vgc10_description display_1cup.launch.py" >> ~/.bash_history
+RUN echo "ros2 launch onrobot_vgc10_description display_4cups.launch.py" >> ~/.bash_history
 
 RUN echo "ros2 launch onrobot_sd_tutorials server.launch.py" >> ~/.bash_history
 RUN echo "ros2 service call /onrobot_sd/move_shank onrobot_interfaces/srv/SetCommand \"{command: '0.2'}\"" >> ~/.bash_history
