@@ -49,7 +49,9 @@ git clone git@github.com:takuya-ki/onrobot_ros2.git --recursive --depth 1 && cd 
 ```bash
 ros2 launch onrobot_sd_description display.launch.py
 ```
-<img src="images/display.png" height="200">  
+```bash
+ros2 launch onrobot_2fg7_description display.launch.py
+```
 
 ##### Run the server receiving motion commands in the real-world
 ```bash
