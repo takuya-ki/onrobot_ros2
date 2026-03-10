@@ -47,7 +47,7 @@ def generate_launch_description():
             executable='joint_state_publisher_gui',
             name='joint_state_publisher_gui',
             condition=IfCondition(LaunchConfiguration('gui')),
-            remappings=[('/joint_states', '/onrobot_sd/joint_states')]
+            remappings=[('/joint_states', '/onrobot_vgc10/joint_states')]
         ),
 
         Node(
@@ -57,7 +57,7 @@ def generate_launch_description():
             parameters=[{
                 'robot_description': robot_description
             }],
-            remappings=[('/joint_states', '/onrobot_sd/joint_states')]
+            remappings=[('/joint_states', '/onrobot_vgc10/joint_states')]
         ),
 
         Node(

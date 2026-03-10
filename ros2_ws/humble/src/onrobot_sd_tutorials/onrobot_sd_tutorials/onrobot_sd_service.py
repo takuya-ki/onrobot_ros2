@@ -34,6 +34,7 @@ class OnRobotSDServer(Node):
         self.bit_extender_length = BIT_EXTENDER
 
         qos_profile = QoSProfile(depth=10)
+        # TODO: publish shank prismatic joint position once the URDF is updated with a movable shank joint
         self.joint_pub = self.create_publisher(JointState, '/onrobot_sd/joint_states', qos_profile)
 
         self.move_shank_srv = self.create_service(
@@ -104,7 +105,7 @@ class OnRobotSDServer(Node):
         # Check the error code
         if err_code != 0:
             if err_code & 0x04 != 0:
-                self.get_logger().info("Screw driver saftey circuit triggered")
+                self.get_logger().info("Screw driver safety circuit triggered")
             if err_code & 0x08 != 0:
                 self.get_logger().info("Screw driver not calibrated")
 
@@ -388,6 +389,9 @@ class OnRobotSDServer(Node):
         @type f_wait: bool
         '''
 
+        if self.isconn(t_index) is False:
+            return CONN_ERR
+
         # Sanity check
         if zforce < 18 or zforce > 30:
             self.get_logger().info("Invalid zforce parameter for pickup screw command, valid range: 18-30")
@@ -408,7 +412,7 @@ class OnRobotSDServer(Node):
                 f_busy = self.isBusy(t_index)
                 busy_cnt += 1
                 if busy_cnt > 100:
-                    self.get_logger().info("Screw driver tighten command timeout")
+                    self.get_logger().info("Screw driver pickup screw command timeout")
                     timeout = True
                     break
             else:
@@ -493,14 +497,15 @@ class OnRobotSDServer(Node):
 
     def resetpower(self, t_index):
         '''
-        Resets the power of the grippers\n
-        Needs to be issued after saftey event
+        Resets the power of the grippers.
+        Needs to be issued after safety event.
 
         @param t_index: The position of the device (0 for single, 1 for dual primary, 2 for dual secondary)
         @type t_index: int
         '''
         if self.isconn(t_index) is False:
             return CONN_ERR
+        # TODO: add the actual XMLRPC reset-power call once the API method name is confirmed
 
     def onrobot_sd_move_shank(self, request, response):
         """To handle sending commands via socket connection."""
@@ -511,17 +516,23 @@ class OnRobotSDServer(Node):
             if not self.isBusy(self.sd_id):  # not busy
                 self.get_logger().info("Shank pose (before): " + str(self.get_shank_pos(self.sd_id)) + "mm")
                 break
+            time.sleep(0.01)
 
+        result = RET_FAIL
         while True:
             if not self.isBusy(self.sd_id):  # not busy
-                self.move_shank(t_index=self.sd_id, shank_pos=pos_val_real, f_wait=True)
+                result = self.move_shank(t_index=self.sd_id, shank_pos=pos_val_real, f_wait=True)
                 break
+            time.sleep(0.01)
 
         while True:
             if not self.isBusy(self.sd_id):  # not busy
                 self.get_logger().info("Shank pose (after): " + str(self.get_shank_pos(self.sd_id)) + "mm")
                 break
+            time.sleep(0.01)
 
+        response.success = (result == RET_OK)
+        response.message = "" if response.success else "move_shank failed"
         return response
 
     def genCommand(self, command):
@@ -534,11 +545,8 @@ class OnRobotSDServer(Node):
 def main(args=None):
     rclpy.init(args=args)
     node = OnRobotSDServer()
-
-    while rclpy.ok():
-        rclpy.spin_once(node)
-
-    node.destroy_service(node.set_command_srv)
+    rclpy.spin(node)
+    node.destroy_service(node.move_shank_srv)
     rclpy.shutdown()
 
 
